@@ -1,0 +1,18 @@
+/* Mine */
+/* .expenses {
+    display: inline-block;
+    width: 50%;
+    margin-left: 25%;
+    margin-right: 25%;
+    background-color: #1e1d1e;
+    padding: 1rem;
+    border-radius: 12px;
+} */
+
+.expenses {
+    padding: 1rem;
+    background-color: #1e1d1e;
+    margin: 2rem auto;
+    width: 50rem;
+    max-width: 95%;
+}
