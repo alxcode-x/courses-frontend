@@ -1,6 +1,6 @@
 import './Expenses.css';
-import ExpenseItem from "./ExpenseItem";
-import Card from './Card';
+import ExpenseItem from "./items/ExpenseItem";
+import Card from '../common/Card';
 
 function items(props) {
     
