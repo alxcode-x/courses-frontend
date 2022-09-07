@@ -11,12 +11,12 @@ const NextExpense = (props) => {
         }
         console.log("In NewExpense.js");
         console.log(expenseData)
-        props.onAddExpense();
+        props.onAddExpense(expenseData); // executing function from props and returning data
     };
 
     return (
         <Card className="new-expense">
-            <ExpenseForm onSaveExpenseData={expenseDataHandler} />
+             <ExpenseForm onSaveExpenseData={expenseDataHandler} /> {/* Passing a function */}
         </Card>
     );
 }

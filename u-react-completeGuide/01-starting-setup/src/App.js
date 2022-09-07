@@ -1,22 +1,27 @@
+import React, {useState} from "react";
 import Expenses from "./components/expenses/Expenses";
 import NewExpense from "./components/newExpense/NewExpense";
 
+const DUMMY_EXPENSES = [
+  { id: 1, title: 'Car Insurance', amount: 287.98, date: new Date(2022, 11, 22) },
+  { id: 2, title: 'Life Insurance', amount: 290.00, date: new Date(2022, 11, 23) },
+  { id: 3, title: 'Medical Insurance', amount: 180.14, date: new Date(2022, 11, 23) },
+  { id: 4, title: 'Car Maintenance', amount: 90.12, date: new Date(2022, 12, 21) }
+];
+
 function App() {
-  const expenses = [
-    { id: 1, title: 'Car Insurance', amount: 287.98, date: new Date(2022, 11, 22) },
-    { id: 2, title: 'Life Insurance', amount: 290.00, date: new Date(2022, 11, 23) },
-    { id: 3, title: 'Medical Insurance', amount: 180.14, date: new Date(2022, 11, 23) },
-    { id: 4, title: 'Car Maintenance', amount: 90.12, date: new Date(2022, 12, 21) }
-  ];
+  const [expenses, setExpenses] = useState(DUMMY_EXPENSES);
 
   const addExpenseHandler = expense => {
-    console.log("In App.js");
-    console.log(expense)
+    setExpenses(prevExpenses => {
+      return [...prevExpenses, expense]
+    });
   }
+
   return (
     <div>
       <h2>Let's get started!</h2>
-      <NewExpense onAddExpense={addExpenseHandler}/>
+      <NewExpense onAddExpense={addExpenseHandler}/> {/* Passing a function */}
       <Expenses items={expenses} />
     </div>
   );
