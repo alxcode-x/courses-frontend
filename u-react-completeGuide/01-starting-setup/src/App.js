@@ -13,7 +13,7 @@ function App() {
   const [expenses, setExpenses] = useState(DUMMY_EXPENSES);
 
   const addExpenseHandler = expense => {
-    setExpenses(prevExpenses => {
+    setExpenses(prevExpenses => { // this is the correct way to update a state that depends on the previous one.
       return [...prevExpenses, expense]
     });
   }
