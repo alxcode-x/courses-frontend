@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './NewExpense.css';
 import ExpenseForm from './expenseForm/ExpenseForm';
 import Card from '../common/Card';
 
 const NextExpense = (props) => {
+    const [openedForm, setOpenedForm] = useState(false);
+
     const expenseDataHandler = (enteredExpenseData) => {
         const expenseData = {
             ...enteredExpenseData,
@@ -12,11 +14,18 @@ const NextExpense = (props) => {
         console.log("In NewExpense.js");
         console.log(expenseData)
         props.onAddExpense(expenseData); // executing function from props and returning data
+        setOpenedForm(false);
     };
+
+    const openFormHandler = () => {
+        setOpenedForm(true)
+    }
 
     return (
         <Card className="new-expense">
-             <ExpenseForm onSaveExpenseData={expenseDataHandler} /> {/* Passing a function */}
+            {openedForm
+                ? <ExpenseForm onSaveExpenseData={expenseDataHandler} onCancel={setOpenedForm}/>
+                : <button onClick={openFormHandler}>Add New Expense</button>}
         </Card>
     );
 }
