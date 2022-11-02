@@ -24,7 +24,7 @@
 }
 
 .fields label {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     font-weight: bold;
 }
 
@@ -39,4 +39,8 @@
 
 .fields input:hover {
     box-shadow: 0.5px 0.5px 3px #c0a18d;
+}
+
+.button-container {
+    margin-top: 10px;
 }

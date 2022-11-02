@@ -1,6 +1,7 @@
 import logo from './logo.svg';
+import AddUsers from './components/users/addUsers/AddUsers';
+import UsersList from './components/users/usersList/UsersList';
 import './App.css';
-import AddUsers from './addUsers/AddUsers'
 
 function App() {
   const addUser = (user) => {
@@ -9,7 +10,8 @@ function App() {
   
   return (
     <div className="App">
-      <AddUsers onAddUser={addUser}/>
+      <AddUsers onAddUser={addUser} />
+      <UsersList users={[]} />
     </div>
   );
 }
