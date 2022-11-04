@@ -1,17 +1,21 @@
-import logo from './logo.svg';
+import React, { useState } from 'react'
 import AddUsers from './components/users/addUsers/AddUsers';
 import UsersList from './components/users/usersList/UsersList';
 import './App.css';
 
 function App() {
-  const addUser = (user) => {
+  const [usersList, setUsersList] = useState([]);
 
+  const addUserHandler = (user) => {
+    setUsersList((prevUsersList) => {
+      return [...prevUsersList, user]
+    })
   }
   
   return (
     <div className="App">
-      <AddUsers onAddUser={addUser} />
-      <UsersList users={[]} />
+      <AddUsers onAddUser={addUserHandler} />
+      <UsersList users={usersList} />
     </div>
   );
 }
