@@ -6,13 +6,22 @@ import ErrorModal from '../../UI/errorModal/ErrorModal'
 function AddUsers(props) {
     const [usernameText, setUsernameText] = useState('');
     const [ageText, setAgeText] = useState('');
+    const [error, setError] = useState();
 
     const addUserHandler = (event) => {
         event.preventDefault();
         if (usernameText.trim().length === 0 || ageText.trim().length === 0) {
+            setError({
+                title: 'Invalid input',
+                message: 'Please enter valid data (non-empty values).'
+            });
             return;
         }
         if (+ageText < 1) {
+            setError({
+                title: 'Invalid age',
+                message: 'Please enter a valid age (> 0).'
+            }); 
             return;
         }
         props.onAddUser({ name: usernameText, age: ageText });
@@ -20,9 +29,13 @@ function AddUsers(props) {
         setAgeText('');
     }
 
+    const errorHandler = () => {
+        setError(null);
+    }
+
     return (
         <div className={styles.main}>
-            <ErrorModal title="An error has ocurred" message="Somethin went wrong."/>
+            {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler}/>}
             <div className={styles["form-wrapper"]}>
                 <form onSubmit={addUserHandler}>
                     <div className={styles["fields"]}>
