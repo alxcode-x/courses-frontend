@@ -12,9 +12,20 @@ const Login = (props) => {
   const [formIsValid, setFormIsValid] = useState(false);
 
   useEffect(() => {
-    setFormIsValid(
-      enteredEmail.includes('@') && enteredPassword.trim().length > 6
-    );
+    // it will wait for 500 ms after stop typing to execute setFormIsValid to avoid execute many times.
+    // it waits because of dependencies, every keystroke waits for 500 ms, if we type fast, the timer starts again and there's no time to execute the function
+    // we are using de 'Debouncing' technique here.
+    const identifier = setTimeout(() => {
+      console.log('Checking form validity');
+      setFormIsValid(
+        enteredEmail.includes('@') && enteredPassword.trim().length > 6
+      );
+    }, 500);
+
+    return () => {
+      clearTimeout(identifier);
+      console.log('CLEAN UP');
+    }
   }, [enteredEmail, enteredPassword]);
 
   const emailChangeHandler = (event) => {
