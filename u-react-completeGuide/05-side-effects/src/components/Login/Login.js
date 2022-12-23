@@ -5,76 +5,86 @@ import classes from './Login.module.css';
 import Button from '../UI/Button/Button';
 
 const emailReducer = (state, action) => {
-  if(action.type === 'USER_INPUT') {
-    return {value: action.val, isValid: action.val.includes('@') };
+  if (action.type === 'USER_INPUT') {
+    return { value: action.val, isValid: action.val.includes('@') };
   }
-  if(action.type === 'INPUT_BLUR'){
-    return { value: state.value, isValid: state.value.includes('@') }
+  if (action.type === 'INPUT_BLUR') {
+    return { value: state.value, isValid: state.value.includes('@') };
   }
   return { value: '', isValid: false };
 };
 
+const passwordReducer = (state, action) => {
+  switch (action.type) {
+    case 'USER_INPUT':
+      return { value: action.val, isValid: action.val.trim().length > 6 };
+      break;
+    case 'INPUT_BLUR':
+      return { value: state.value, isValid: state.value.trim().length > 6 };
+      break;
+    default:
+  }
+};  
+
 const Login = (props) => {
-  // const [enteredEmail, setEnteredEmail] = useState('');
-  // const [emailIsValid, setEmailIsValid] = useState();
-  const [enteredPassword, setEnteredPassword] = useState('');
-  const [passwordIsValid, setPasswordIsValid] = useState();
+  // See example with useState in this commit: 29ca05a7be8
   const [formIsValid, setFormIsValid] = useState(false);
 
   const [emailState, dispatchEmail] = useReducer(emailReducer, {
-    value: '', 
-    isValid: false,
+    value: '',
+    isValid: null,
   });
 
-  // useEffect(() => {
-  //   // it will wait for 500 ms after stop typing to execute setFormIsValid to avoid execute many times.
-  //   // it waits because of dependencies, every keystroke waits for 500 ms, if we type fast, the timer starts again and there's no time to execute the function
-  //   // we are using de 'Debouncing' technique here.
-  //   const identifier = setTimeout(() => {
-  //     console.log('Checking form validity');
-  //     setFormIsValid(
-  //       enteredEmail.includes('@') && enteredPassword.trim().length > 6
-  //     );
-  //   }, 500);
+  const [passwordState, dispatchPassword] = useReducer(passwordReducer, {
+    value: '',
+    isValid: null
+  });
 
-  //   return () => {
-  //     clearTimeout(identifier);
-  //     console.log('CLEAN UP');
-  //   }
-  // }, [enteredEmail, enteredPassword]);
+  const { isValid: emailIsValid } = emailState;
+  const { isValid: passwordIsValid } = passwordState;
 
+  useEffect(() => {
+    // it will wait for 500 ms after stop typing to execute setFormIsValid to avoid execute many times.
+    // it waits because of dependencies, every keystroke waits for 500 ms, if we type fast, the timer starts again and there's no time to execute the function
+    // we are using de 'Debouncing' technique here.
+    const identifier = setTimeout(() => {
+      console.log('Checking form validity');
+      setFormIsValid(emailIsValid && passwordIsValid);
+    }, 500);
+
+    return () => {
+      clearTimeout(identifier);
+      console.log('CLEAN UP');
+    }
+  }, [emailIsValid, passwordIsValid]);
+  
   const emailChangeHandler = (event) => {
-    dispatchEmail({type: 'USER_INPUT', val: event.target.value});
-    setFormIsValid(emailState.isValid && enteredPassword.trim().length > 6);
+    dispatchEmail({ type: 'USER_INPUT', val: event.target.value });
+    //setFormIsValid(emailState.isValid && passwordState.isValid);
   };
 
   const passwordChangeHandler = (event) => {
-    setEnteredPassword(event.target.value);
-    setFormIsValid(emailState.isValid && enteredPassword.trim().length > 6);
+    dispatchPassword({type: 'USER_INPUT', val: event.target.value});
+    //setFormIsValid(emailState.isValid && passwordState.isValid);
   };
 
   const validateEmailHandler = () => {
-    //setEmailIsValid(emailState.isValid);
-    dispatchEmail({ type: 'INPUT_BLUR'})
+    dispatchEmail({ type: 'INPUT_BLUR' })
   };
 
   const validatePasswordHandler = () => {
-    setPasswordIsValid(enteredPassword.trim().length > 6);
+    dispatchPassword({ type: 'INPUT_BLUR' });
   };
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(emailState.value, enteredPassword);
+    props.onLogin(emailState.value, passwordState.value);
   };
 
   return (
     <Card className={classes.login}>
       <form onSubmit={submitHandler}>
-        <div
-          className={`${classes.control} ${
-            emailState.isValid === false ? classes.invalid : ''
-          }`}
-        >
+        <div className={`${classes.control} ${emailState.isValid === false ? classes.invalid : ''}`}>
           <label htmlFor="email">E-Mail</label>
           <input
             type="email"
@@ -84,16 +94,12 @@ const Login = (props) => {
             onBlur={validateEmailHandler}
           />
         </div>
-        <div
-          className={`${classes.control} ${
-            passwordIsValid === false ? classes.invalid : ''
-          }`}
-        >
+        <div className={`${classes.control} ${passwordState.isValid === false ? classes.invalid : ''}`}>
           <label htmlFor="password">Password</label>
           <input
             type="password"
             id="password"
-            value={enteredPassword}
+            value={passwordState.value}
             onChange={passwordChangeHandler}
             onBlur={validatePasswordHandler}
           />
