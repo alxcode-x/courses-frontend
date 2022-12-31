@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, Fragment } from 'react';
 import Login from './components/Login/Login';
 import Home from './components/Home/Home';
 import MainHeader from './components/MainHeader/MainHeader';
@@ -8,13 +8,13 @@ function App() {
   const ctx = useContext(AuthContext);
 
   return (
-    <React.Fragment>
+    <Fragment>
       <MainHeader />
       <main>
         {ctx.isLoggedIn && <Home />}
         {!ctx.isLoggedIn && <Login />}
       </main>
-    </React.Fragment>
+    </Fragment>
   );
 }
 
