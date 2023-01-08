@@ -2,7 +2,7 @@ import React from 'react'
 
 import classes from './AvailableMeals.module.css'
 import Card from '../common/card/Card';
-import MealItem from './mealItem/MealItem';
+import MealItem from './meal-item/MealItem';
 
 const DUMMY_MEALS = [
     {
