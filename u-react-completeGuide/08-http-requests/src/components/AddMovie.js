@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-
 import classes from './AddMovie.module.css';
 
 function AddMovie(props) {
