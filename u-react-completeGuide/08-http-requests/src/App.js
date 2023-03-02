@@ -61,6 +61,7 @@ function App() {
         }
       });
 
+      // eslint-disable-next-line no-unused-vars
       const data = await response.json();
     }
     catch (error) {
