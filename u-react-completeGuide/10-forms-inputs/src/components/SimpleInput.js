@@ -1,19 +1,21 @@
 import { useState } from 'react';
+import useInput from '../hooks/use-input';
 
 const SimpleInput = (props) => {
   //const nameInputRef = useRef(); // ref approach
-  const [enteredName, setEneteredName] = useState('');
-  const [nameIsBlur, setNameIsBlur] = useState(false)
+  const {
+    value: enteredName,
+    isValid: enteredNameIsValid,
+    hasError: nameInputHasError,
+    valueChangeHandler: nameChangeHandler,
+    valueIsBlur: nameBlurHandler,
+    reset:
+  } = useInput(value => value.trim() !== '');
 
-  const nameIsValid = enteredName.trim() !== '';
-  const nameIsInvalid = !nameIsValid && nameIsBlur;
+  let formIsValid = false;
 
-  const nameInputChangeHandler = (event) => {
-    setEneteredName(event.target.value);
-  }
-
-  const nameInputBlurHandler = () => {
-    setNameIsBlur(true);
+  if(enteredNameIsValid && enteredEmailIsValid){
+    formIsValid = true;
   }
 
   const formSubmissionHandler = (event) => {
@@ -21,13 +23,13 @@ const SimpleInput = (props) => {
 
     setNameIsBlur(true);
 
-    if (!nameIsValid) {
+    if (!formIsValid) {
       return;
     }
 
     console.log(enteredName);
-    setEneteredName('');
-    setNameIsBlur(false);
+    resetNameInput();
+
     // ref approach
     //console.log(nameInputRef.current.value);
     //nameInputRef.current.value = '';
@@ -37,9 +39,9 @@ const SimpleInput = (props) => {
     <form onSubmit={formSubmissionHandler}>
       <div className={nameIsInvalid ? 'form-control invalid' : 'form-control'}>
         <label htmlFor='name'>Your Name</label>
-        <input type='text' id='name' onChange={nameInputChangeHandler} onBlur={nameInputBlurHandler} value={enteredName} />
+        <input type='text' id='name' onChange={nameChangeHandler} onBlur={nameBlurHandler} value={enteredName} />
         {/* <input ref={nameInputRef} type='text' id='name' onChange={nameInputChangeHandler}/> //ref approach*/}
-        {!nameIsValid && <p className='error-text'>Name can't be empty.</p>}
+        {nameInputHasError && <p className='error-text'>Name can't be empty.</p>}
       </div>
       <div className="form-actions">
         <button>Submit</button>
