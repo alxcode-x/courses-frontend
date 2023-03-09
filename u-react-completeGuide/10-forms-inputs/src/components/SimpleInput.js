@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import useInput from '../hooks/use-input';
 
 const SimpleInput = (props) => {
@@ -9,26 +8,33 @@ const SimpleInput = (props) => {
     hasError: nameInputHasError,
     valueChangeHandler: nameChangeHandler,
     valueIsBlur: nameBlurHandler,
-    reset:
+    reset:resetNameInput
   } = useInput(value => value.trim() !== '');
+
+  const {
+    value: enteredEmail,
+    isValid: enteredEmailIsValid,
+    hasError: emailInputHasError,
+    valueChangeHandler: emailChangeHandler,
+    valueIsBlur: emailBlurHandler,
+    reset: resetEmailInput
+  } = useInput(value => value.trim() !== '' && value.includes('@'));
 
   let formIsValid = false;
 
-  if(enteredNameIsValid && enteredEmailIsValid){
+  if (enteredNameIsValid && enteredEmailIsValid) {
     formIsValid = true;
   }
 
   const formSubmissionHandler = (event) => {
     event.preventDefault();
 
-    setNameIsBlur(true);
-
     if (!formIsValid) {
       return;
     }
 
-    console.log(enteredName);
     resetNameInput();
+    resetEmailInput();
 
     // ref approach
     //console.log(nameInputRef.current.value);
@@ -37,11 +43,17 @@ const SimpleInput = (props) => {
 
   return (
     <form onSubmit={formSubmissionHandler}>
-      <div className={nameIsInvalid ? 'form-control invalid' : 'form-control'}>
+      <div className={nameInputHasError ? 'form-control invalid' : 'form-control'}>
         <label htmlFor='name'>Your Name</label>
         <input type='text' id='name' onChange={nameChangeHandler} onBlur={nameBlurHandler} value={enteredName} />
         {/* <input ref={nameInputRef} type='text' id='name' onChange={nameInputChangeHandler}/> //ref approach*/}
         {nameInputHasError && <p className='error-text'>Name can't be empty.</p>}
+      </div>
+      <div className={emailInputHasError ? 'form-control invalid' : 'form-control'}>
+        <label htmlFor='email'>Your Email</label>
+        <input type='text' id='email' onChange={emailChangeHandler} onBlur={emailBlurHandler} value={enteredEmail} />
+        {/* <input ref={nameInputRef} type='text' id='name' onChange={nameInputChangeHandler}/> //ref approach*/}
+        {emailInputHasError && <p className='error-text'>Email can't be empty.</p>}
       </div>
       <div className="form-actions">
         <button>Submit</button>
