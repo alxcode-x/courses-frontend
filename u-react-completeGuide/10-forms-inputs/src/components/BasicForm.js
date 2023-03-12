@@ -26,7 +26,7 @@ const BasicForm = (props) => {
     inputChangeHandler: emailChangeHandler,
     inputBlurHandler: emailBlurHandler,
     reset: resetEmail,
-  } = useInput(input => input.trim() !== '');
+  } = useInput(input => input.trim() !== '' && input.includes('@'));
 
   const formSubmitHandler = (event) => {
     event.preventDefault();
@@ -57,7 +57,7 @@ const BasicForm = (props) => {
       <div className={emailHasError ? 'form-control invalid' : 'form-control'}>
         <label htmlFor='email'>E-Mail Address</label>
         <input type='text' id='email' value={emailValue} onChange={emailChangeHandler} onBlur={emailBlurHandler} />
-        {emailHasError && <span className='error-text'>Email cannot be empty.</span>}
+        {emailHasError && <span className='error-text'>Enter a valid email.</span>}
       </div>
       <div className='form-actions'>
         <button>Submit</button>

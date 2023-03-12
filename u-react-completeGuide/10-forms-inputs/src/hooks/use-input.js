@@ -1,27 +1,43 @@
-import { useState } from 'react';
+// useReducer is not really needed here, it's used jost for practice.
+import { useReducer } from 'react';
+const initialInputState = {
+    value: '',
+    isTouched: false
+}
+
+const inputStateReducer = (state, action) => {
+    return (action.type === 'INPUT') ? { value: action.value, isTouched: state.isTouched }
+        : (action.type === 'BLUR') ? { value: state.value, isTouched: true }
+        : (action.type === 'RESET') ? { value: '', isTouched: false }
+        : inputStateReducer;
+}
 
 function useInput(validateValue) {
-    const [enteredValue, setEnteredValue] = useState('');
-    const [isTouched, setIsTouched] = useState('');
+    const [inputState, dispatch] = useReducer(inputStateReducer, initialInputState);
+    // const [enteredValue, setEnteredValue] = useState('');
+    // const [isTouched, setIsTouched] = useState('');
 
-    const valueIsValid = validateValue(enteredValue);
-    const hasError = !valueIsValid && isTouched;
+    const valueIsValid = validateValue(inputState.value);
+    const hasError = !valueIsValid && inputState.isTouched;
 
     const valueChangeHandler = (event) => {
-        setEnteredValue(event.target.value);
-    }
+        // setEnteredValue(event.target.value);
+        dispatch({type: 'INPUT', value: event.target.value});
+    };
 
     const valueBlurHandler = () => {
-        setIsTouched(true);
-    }
+        // setIsTouched(true);
+        dispatch({type: 'BLUR'});
+    };
 
     const reset = () => {
-        setEnteredValue('');
-        isTouched(false);
-    }
+        // setEnteredValue('');
+        // isTouched(false);
+        dispatch({type: 'RESET'});
+    };
 
     return {
-        value: enteredValue,
+        value: inputState.value,
         isValid: valueIsValid,
         hasError,
         valueChangeHandler,
