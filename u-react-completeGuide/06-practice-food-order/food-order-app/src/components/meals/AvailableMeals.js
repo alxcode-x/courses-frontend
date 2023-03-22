@@ -5,7 +5,7 @@ import Card from '../common/card/Card';
 import MealItem from './meal-item/MealItem';
 
 function AvailableMeal() {
-    const { data } = useHttpRequest('https://react-http-test-8f2c7-default-rtdb.firebaseio.com/meals.json', null);
+    const { data, isLoading } = useHttpRequest('https://react-http-test-8f2c7-default-rtdb.firebaseio.com/meals.json', null);
 
     let mealsList = [];
 
@@ -16,6 +16,14 @@ function AvailableMeal() {
             description: data[key].description,
             price: data[key].price,
         });
+    }
+    
+    if (isLoading) {
+        return (
+            <section className={classes['meals-loading']}>
+                <p>Loading...</p>
+            </section>
+        )
     }
 
     const meals = mealsList.map(meal => <MealItem key={meal.id} id={meal.id} name={meal.name} description={meal.description} price={meal.price}></MealItem>);
