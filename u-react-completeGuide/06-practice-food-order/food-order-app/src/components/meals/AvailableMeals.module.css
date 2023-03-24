@@ -10,6 +10,11 @@
     color: white;
   }
 
+  .meals-http-error {
+    text-align: center;
+    color: #c94e4e;
+  }
+
   .meals ul {
     list-style: none;
     margin: 0;

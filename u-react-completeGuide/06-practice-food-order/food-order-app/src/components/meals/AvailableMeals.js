@@ -5,7 +5,7 @@ import Card from '../common/card/Card';
 import MealItem from './meal-item/MealItem';
 
 function AvailableMeal() {
-    const { data, isLoading } = useHttpRequest('https://react-http-test-8f2c7-default-rtdb.firebaseio.com/meals.json', null);
+    const { data, isLoading, error } = useHttpRequest('https://react-http-test-8f2c7-default-rtdb.firebaseio.com/meals.json', null);
 
     let mealsList = [];
 
@@ -17,11 +17,18 @@ function AvailableMeal() {
             price: data[key].price,
         });
     }
-    
+
     if (isLoading) {
         return (
             <section className={classes['meals-loading']}>
                 <p>Loading...</p>
+            </section>
+        )
+    }
+    if (error.isError) {
+        return (
+            <section className={classes['meals-http-error']}>
+                <p>{error.message}</p>
             </section>
         )
     }
