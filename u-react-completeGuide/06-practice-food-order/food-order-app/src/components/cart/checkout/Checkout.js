@@ -1,28 +1,71 @@
-import React, { useRef } from 'react';
+import React, { useRef, useReducer } from 'react';
 import classes from './Checkout.module.css';
 
 const isEmpty = (value) => value.trim().length === 0;
 const isFiveChars = (value) => value.trim().length >= 5;
 
+const defaultFormValidationState = {
+    inputs: {
+        name: false,
+        street: false,
+        city: false,
+        postal: false,
+    },
+    form: false
+
+}
+const checkoutReducer = (state, action) => {
+    if (action.type === 'INPUTS') {
+        return {
+            inputs: {
+                name: !isEmpty(action.inputs.name) && isFiveChars(action.inputs.name),
+                street: !isEmpty(action.inputs.street) && isFiveChars(action.inputs.street),
+                city: !isEmpty(action.inputs.city) && isFiveChars(action.inputs.city),
+                postal: !isEmpty(action.inputs.postal) && isFiveChars(action.inputs.postal),
+            },
+            form: state.form
+        }
+    }
+
+    if (action.type === 'FORM') {
+        return {
+            inputs: {...state.inputs},
+            form: state.inputs.name && state.inputs.street && state.inputs.city && state.inputs.postal,
+        }
+    }
+
+    return defaultFormValidationState;
+}
+
 function Checkout(props) {
+    const [formValidity, dispatchFormValidation] = useReducer(checkoutReducer, defaultFormValidationState);
     const nameRef = useRef();
     const streetRef = useRef();
     const postalRef = useRef();
     const cityRef = useRef();
 
+    console.log(formValidity);
+
     const confirmHandler = (event) => {
         event.preventDefault();
 
-        const nameIsValid = !isEmpty(nameRef.current.value) && isFiveChars(nameRef.current.value);
-        const streetIsValid = !isEmpty(streetRef.current.value) && isFiveChars(streetRef.current.value);
-        const postalIsValid = !isEmpty(postalRef.current.value) && isFiveChars(postalRef.current.value);
-        const cityIsValid = !isEmpty(cityRef.current.value) && isFiveChars(cityRef.current.value);
+        dispatchFormValidation({
+            type: 'INPUTS',
+            inputs: {
+                name: nameRef.current.value,
+                street: streetRef.current.value,
+                city: cityRef.current.value,
+                postal: postalRef.current.value,
+            }
+        });
 
-        const formIsValid = nameIsValid && streetIsValid && postalIsValid && cityIsValid;
+        dispatchFormValidation({type: 'FORM'});
 
-        if(!formIsValid){
-            return;
-        }
+        // const formIsValid = nameIsValid && streetIsValid && postalIsValid && cityIsValid;
+
+        // if (!formIsValid) {
+        //     return;
+        // }
 
     };
 
