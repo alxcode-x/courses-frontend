@@ -1,35 +1,32 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-function useHttpRequest(url, options = { method: 'GET', headers: { 'Content-Type': 'application/json' }, body: null}) {
+function useHttpRequest() {
     const [data, setData] = useState([]);
-    const [error, setError] = useState({isError: false, message: ''});
+    const [status, setStatus] = useState({ ok: true, message: '' });
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        const sendRequest = async () => {
-            try {
-                const response = await fetch(url, options);
+    const sendRequest = async (url, options = { method: 'GET', headers: { 'Content-Type': 'application/json' }, body: null }) => {
+        try {
+            const response = await fetch(url, options);
 
-                if (!response.ok) {
-                    throw new Error(`Something went wrong. Status code: ${response.status}`)
-                }
-
-                const jsonData = await response.json();
-                setData(jsonData);
-                setIsLoading(false);
+            if (!response.ok) {
+                throw new Error(`Something went wrong. Status code: ${response.status}`)
             }
-            catch (ex) {
-                setError({isError: true, message: `Something went wrong. Response: ${ex.message}`});
-                setIsLoading(false);
-            }
-        };
 
-        sendRequest();
-    },[url, options]);
+            const jsonData = await response.json();
+            setData(jsonData);
+            setIsLoading(false);
+        }
+        catch (ex) {
+            setStatus({ ok: false, message: `Something went wrong. Response: ${ex.message}` });
+            setIsLoading(false);
+        }
+    };
 
     return {
+        sendRequest,
         data,
-        error,
+        status,
         isLoading
     }
 }

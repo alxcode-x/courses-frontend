@@ -1,11 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import useHttpRequest from '../../hooks/useHttpRequest';
 import classes from './AvailableMeals.module.css'
 import Card from '../common/card/Card';
 import MealItem from './meal-item/MealItem';
 
 function AvailableMeal() {
-    const { data, isLoading, error } = useHttpRequest('https://react-http-test-8f2c7-default-rtdb.firebaseio.com/meals.json', null);
+    const { sendRequest, data, isLoading, status } = useHttpRequest();
+
+    useEffect(() => {
+        getData();
+    }, []);
+
+    const getData = async () => {
+        await sendRequest('https://react-http-test-8f2c7-default-rtdb.firebaseio.com/meals.json');
+    };
 
     let mealsList = [];
 
@@ -25,10 +33,10 @@ function AvailableMeal() {
             </section>
         )
     }
-    if (error.isError) {
+    if (!status.ok) {
         return (
             <section className={classes['meals-http-error']}>
-                <p>{error.message}</p>
+                <p>{status.message}</p>
             </section>
         )
     }

@@ -6,10 +6,10 @@ const isFiveChars = (value) => value.trim().length >= 5;
 
 const defaultFormValidationState = {
     inputs: {
-        name: false,
-        street: false,
-        city: false,
-        postal: false,
+        name: true,
+        street: true,
+        city: true,
+        postal: true,
     },
     form: false
 
@@ -29,7 +29,7 @@ const checkoutReducer = (state, action) => {
 
     if (action.type === 'FORM') {
         return {
-            inputs: {...state.inputs},
+            inputs: { ...state.inputs },
             form: state.inputs.name && state.inputs.street && state.inputs.city && state.inputs.postal,
         }
     }
@@ -44,8 +44,6 @@ function Checkout(props) {
     const postalRef = useRef();
     const cityRef = useRef();
 
-    console.log(formValidity);
-
     const confirmHandler = (event) => {
         event.preventDefault();
 
@@ -59,33 +57,51 @@ function Checkout(props) {
             }
         });
 
-        dispatchFormValidation({type: 'FORM'});
+        dispatchFormValidation({ type: 'FORM' });
 
-        // const formIsValid = nameIsValid && streetIsValid && postalIsValid && cityIsValid;
+        if (!formValidity.form) {
+            return;
+        }
 
-        // if (!formIsValid) {
-        //     return;
-        // }
-
+        props.onConfirm({
+            name: nameRef.current.value,
+            street: streetRef.current.value,
+            city: cityRef.current.value,
+            postal: postalRef.current.value,
+        });
     };
 
+    const inputClasses = {
+        name: `${classes.control} ${formValidity.inputs.name ? '' : classes.invalid}`,
+        street: `${classes.control} ${formValidity.inputs.street ? '' : classes.invalid}`,
+        postal: `${classes.control} ${formValidity.inputs.postal ? '' : classes.invalid}`,
+        city: `${classes.control} ${formValidity.inputs.city ? '' : classes.invalid}`,
+    }
+
     return (
-        <form className={classes.form} onSubmit={confirmHandler}>
+        <form className={inputClasses.name} onSubmit={confirmHandler}>
             <div className={classes.control}>
                 <label htmlFor='name'>Your Name</label>
                 <input type='text' id='name' ref={nameRef} />
+                {!formValidity.inputs.name && <p>Please enter a valid name</p>}
             </div>
-            <div className={classes.control}>
+            <div className={inputClasses.street}>
                 <label htmlFor='street'>Street</label>
                 <input type='text' id='street' ref={streetRef} />
+                {!formValidity.inputs.street && <p>Please enter a valid street</p>}
+
             </div>
-            <div className={classes.control}>
+            <div className={inputClasses.postal}>
                 <label htmlFor='postal'>Postal Code</label>
                 <input type='text' id='postal' ref={postalRef} />
+                {!formValidity.inputs.postal && <p>Please enter a valid postal code </p>}
+
             </div>
-            <div className={classes.control}>
+            <div className={inputClasses.city}>
                 <label htmlFor='city'>City</label>
                 <input type='text' id='city' ref={cityRef} />
+                {!formValidity.inputs.city && <p>Please enter a valid city</p>}
+
             </div>
             <div className={classes.actions}>
                 <button type='button' onClick={props.onCancel}>
