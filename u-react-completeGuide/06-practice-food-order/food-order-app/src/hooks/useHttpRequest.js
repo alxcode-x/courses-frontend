@@ -2,10 +2,11 @@ import { useState } from 'react';
 
 function useHttpRequest() {
     const [data, setData] = useState([]);
-    const [status, setStatus] = useState({ ok: true, message: '' });
-    const [isLoading, setIsLoading] = useState(true);
+    const [status, setStatus] = useState({ ok: false, message: '' });
+    const [isLoading, setIsLoading] = useState(false);
 
     const sendRequest = async (url, options = { method: 'GET', headers: { 'Content-Type': 'application/json' }, body: null }) => {
+        setIsLoading(true);
         try {
             const response = await fetch(url, options);
 
@@ -15,6 +16,7 @@ function useHttpRequest() {
 
             const jsonData = await response.json();
             setData(jsonData);
+            setStatus({ok: true, message: 'OK'});
             setIsLoading(false);
         }
         catch (ex) {

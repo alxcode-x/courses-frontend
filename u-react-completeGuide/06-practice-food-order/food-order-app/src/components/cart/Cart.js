@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, Fragment } from 'react'
 import useHttpRequest from '../../hooks/useHttpRequest';
 import classes from './Cart.module.css';
 import Modal from '../common/modal/Modal';
@@ -9,7 +9,8 @@ import Checkout from './checkout/Checkout';
 function Cart(props) {
     const cartCtx = useContext(CartContext);
     const [isCheckout, setIsCheckout] = useState(false);
-    const { sendRequest, data, isLoading, status } = useHttpRequest();
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const { sendRequest, isLoading, status } = useHttpRequest();
 
     const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
 
@@ -33,9 +34,7 @@ function Cart(props) {
             }
         );
 
-        if(status.ok){
-            props.onClose();
-        }
+        setIsSubmitted(true);
     };
 
     const cartItems = cartCtx.items.map(
@@ -56,8 +55,8 @@ function Cart(props) {
         </div>
     );
 
-    return (
-        <Modal onClose={props.onClose}>
+    const cartModalContent = (
+        <Fragment>
             <ul className={classes['cart-items']}>
                 {cartItems}
             </ul>
@@ -65,9 +64,30 @@ function Cart(props) {
                 <span>Total Amount</span>
                 <span>{totalAmount}</span>
             </div>
-            {!status.ok && <p>{status.message}</p>}
             {isCheckout && <Checkout onConfirm={submitOrderHandler} onCancel={props.onClose} />}
             {!isCheckout && modalActions}
+        </Fragment>
+    );
+
+    const sendingOrderModalContent = (
+        <Fragment>
+            <p>Sending order...</p>
+        </Fragment>
+    );
+
+    const submittedModalContent = (
+        <Fragment>
+            <p>The order has been sent!</p>
+            <button className={classes.button} onClick={props.onClose}>Close</button>
+        </Fragment>
+    );
+
+    return (
+        <Modal onClose={props.onClose}>
+            {!isSubmitted && cartModalContent}
+            {isLoading && sendingOrderModalContent}
+            {isSubmitted && status.ok && submittedModalContent}
+            {isSubmitted && !status.ok && <p>{status.message}</p>}
         </Modal>
     )
 }

@@ -58,8 +58,9 @@ function Checkout(props) {
         });
 
         dispatchFormValidation({ type: 'FORM' });
-
+        console.log("click");
         if (!formValidity.form) {
+            console.log(formValidity)
             return;
         }
 
@@ -107,7 +108,7 @@ function Checkout(props) {
                 <button type='button' onClick={props.onCancel}>
                     Cancel
                 </button>
-                <button className={classes.submit}>Confirm</button>
+                <button type="submit" className={classes.submit}>Confirm</button>
             </div>
         </form>
     );
