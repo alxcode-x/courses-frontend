@@ -71,14 +71,16 @@ function Cart(props) {
 
     const sendingOrderModalContent = (
         <Fragment>
-            <p>Sending order...</p>
+            <p className={classes.messages}>Sending order...</p>
         </Fragment>
     );
 
     const submittedModalContent = (
         <Fragment>
-            <p>The order has been sent!</p>
-            <button className={classes.button} onClick={props.onClose}>Close</button>
+            <p className={classes.messages}>The order has been sent!</p>
+            <div className={classes.actions}>
+                <button className={classes.button} onClick={props.onClose}>Close</button>
+            </div>
         </Fragment>
     );
 
@@ -87,7 +89,7 @@ function Cart(props) {
             {!isSubmitted && cartModalContent}
             {isLoading && sendingOrderModalContent}
             {isSubmitted && status.ok && submittedModalContent}
-            {isSubmitted && !status.ok && <p>{status.message}</p>}
+            {isSubmitted && !status.ok && <p className={classes.messages}>{status.message}</p>}
         </Modal>
     )
 }

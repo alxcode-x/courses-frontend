@@ -1,4 +1,4 @@
-import React, { useRef, useReducer } from 'react';
+import React, { useRef, useReducer, useEffect } from 'react';
 import classes from './Checkout.module.css';
 
 const isEmpty = (value) => value.trim().length === 0;
@@ -15,22 +15,20 @@ const defaultFormValidationState = {
 
 }
 const checkoutReducer = (state, action) => {
-    if (action.type === 'INPUTS') {
+    if (action.type === 'FORM') {
+        const nameIsValid = !isEmpty(action.inputs.name) && isFiveChars(action.inputs.name);
+        const streetIsValid = !isEmpty(action.inputs.street) && isFiveChars(action.inputs.street);
+        const cityIsValid = !isEmpty(action.inputs.city) && isFiveChars(action.inputs.city);
+        const postalIsValid = !isEmpty(action.inputs.postal) && isFiveChars(action.inputs.postal);
+        const formIsValid = nameIsValid && streetIsValid && cityIsValid && postalIsValid;
         return {
             inputs: {
-                name: !isEmpty(action.inputs.name) && isFiveChars(action.inputs.name),
-                street: !isEmpty(action.inputs.street) && isFiveChars(action.inputs.street),
-                city: !isEmpty(action.inputs.city) && isFiveChars(action.inputs.city),
-                postal: !isEmpty(action.inputs.postal) && isFiveChars(action.inputs.postal),
+                name: nameIsValid,
+                street: streetIsValid,
+                city: cityIsValid,
+                postal: postalIsValid,
             },
-            form: state.form
-        }
-    }
-
-    if (action.type === 'FORM') {
-        return {
-            inputs: { ...state.inputs },
-            form: state.inputs.name && state.inputs.street && state.inputs.city && state.inputs.postal,
+            form: formIsValid,
         }
     }
 
@@ -44,23 +42,8 @@ function Checkout(props) {
     const postalRef = useRef();
     const cityRef = useRef();
 
-    const confirmHandler = (event) => {
-        event.preventDefault();
-
-        dispatchFormValidation({
-            type: 'INPUTS',
-            inputs: {
-                name: nameRef.current.value,
-                street: streetRef.current.value,
-                city: cityRef.current.value,
-                postal: postalRef.current.value,
-            }
-        });
-
-        dispatchFormValidation({ type: 'FORM' });
-        console.log("click");
+    useEffect(() => {
         if (!formValidity.form) {
-            console.log(formValidity)
             return;
         }
 
@@ -70,6 +53,12 @@ function Checkout(props) {
             city: cityRef.current.value,
             postal: postalRef.current.value,
         });
+
+    }, [formValidity]);
+
+    const confirmHandler = (event) => {
+        event.preventDefault();
+        dispatchFormValidation({ type: 'FORM', inputs: { name: nameRef.current.value, street: streetRef.current.value, postal: postalRef.current.value, city: cityRef.current.value } });
     };
 
     const inputClasses = {
