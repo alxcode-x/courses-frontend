@@ -1,5 +1,5 @@
-import uiActions from '../reducers/ui-slice'
-import cardActions, { cartActions } from '../reducers/cart-slice';
+import { uiActions } from '../reducers/ui-slice'
+import { cartActions } from '../reducers/cart-slice';
 
 const fetchCartData = () => {
     return async (dispatch) => {
@@ -16,7 +16,7 @@ const fetchCartData = () => {
             const cartData = await fetchData();
             dispatch(cartActions.getItems({
                 items: cartData.items || [],
-                totalQuantitiy: cartData.totalQuantity || []
+                totalQuantity: cartData.totalQuantity || 0,
             }));
         }
         catch (error) {
@@ -42,7 +42,7 @@ const sendCartData = (cart) => {
                 method: 'PUT',
                 body: JSON.stringify({
                     items: cart.items,
-                    totalQuantitiy: cart.totalQuantitiy
+                    totalQuantity: cart.totalQuantity,
                 })
             });
 

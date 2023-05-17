@@ -13,7 +13,6 @@ function App() {
   const notification = useSelector(state => state.ui.notification);
   const cart = useSelector(state => state.cart);
   const dispatch = useDispatch();
-
   useEffect(() => {
     dispatch(fetchCartData());
   }, [dispatch]);
@@ -25,9 +24,10 @@ function App() {
     }
 
     if (cart.changed){
-      dispatch(sendCartData());
+      console.log("send")
+      dispatch(sendCartData(cart));
     }
-  }, [cart]);
+  }, [cart, dispatch]);
 
   return (
     <Layout>
