@@ -24,6 +24,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./pages/Root";
 import Error from "./pages/Error";
 import HomePage from "./pages/HomePage";
+import EventsRoot from "./pages/EventsRoot";
 import EventsPage from "./pages/EventsPage";
 import EventDetailPage from "./pages/EventDetailPage";
 import NewEventPage from "./pages/NewEventPage";
@@ -36,15 +37,20 @@ function App() {
       element: <Root />,
       errorElement: <Error />,
       children: [
-        { index: '/', element: <HomePage /> },
-        { path: 'events', element: <EventsPage /> },
-        { path: 'events/:id', element: <EventDetailPage /> },
-        { path: 'events/new', element: <NewEventPage /> },
-        { path: 'events/:id/edit', element: <EditEventPage /> },
+        { index: true, element: <HomePage /> },
+        {
+          path: 'events', element: <EventsRoot />, children: [
+            { index: true, element: <EventsPage /> },
+            { path: ':id', element: <EventDetailPage /> },
+            { path: 'new', element: <NewEventPage /> },
+            { path: ':id/edit', element: <EditEventPage /> },
+          ]
+        }
       ]
     }
   ]);
-  return <div></div>;
+
+  return <RouterProvider router={router}></RouterProvider>;
 }
 
 export default App;

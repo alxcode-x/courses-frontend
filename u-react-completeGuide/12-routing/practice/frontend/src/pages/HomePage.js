@@ -1,11 +1,9 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 
 function HomePage() {
     return (
         <>
-            <div>HomePage</div>
-            <Link to=""></Link>
+            <h1>HomePage</h1>
         </>
     )
 }
