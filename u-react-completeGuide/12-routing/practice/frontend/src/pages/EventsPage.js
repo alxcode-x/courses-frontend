@@ -2,20 +2,24 @@ import { useLoaderData } from 'react-router-dom';
 import EventsList from '../components/EventsList';
 
 function EventsPage() {
-  const events = useLoaderData();
+  const data = useLoaderData();
 
   return (
     <>
-      <EventsList events={events} />
+      <EventsList events={data.events} />
     </>
   );
 }
 
 const eventsLoader = async () => {
-  const response = await fetch('http://localhost:8080/events');
+  const response = await fetch('http://localhost:8080/events1');
   if (response.ok) {
-    const data = await response.json();
-    return data.events;
+    // const data = await response.json(); // since useLoaderDate retuns a promise that resolves a Request(), it's not necessary manage the response here.
+    // return data;
+    return response;
+  }
+  else {
+    throw new Response(JSON.stringify({ message: "No events found!" }), { status: 400 });
   }
 }
 
