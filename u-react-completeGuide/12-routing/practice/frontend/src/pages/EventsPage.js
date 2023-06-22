@@ -19,7 +19,7 @@ const eventsLoader = async () => {
     return response;
   }
   else {
-    throw new Response(JSON.stringify({ message: "No events found!" }), { status: 400 });
+    throw new Response(JSON.stringify({ message: "No events found!" }), { status: 400 }); // by throwing an exception, the closest error page to this component, will be rendered
   }
 }
 
