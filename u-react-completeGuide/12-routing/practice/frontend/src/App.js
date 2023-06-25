@@ -26,9 +26,10 @@ import Error from "./pages/Error";
 import HomePage from "./pages/HomePage";
 import EventsRoot from "./pages/EventsRoot";
 import EventsPage, { eventsLoader } from "./pages/EventsPage";
-import EventDetailPage, { eventDetailsLoader } from "./pages/EventDetailPage";
-import NewEventPage, { action as newEventAction} from "./pages/NewEventPage";
+import EventDetailPage, { eventDetailsLoader, deleteAction } from "./pages/EventDetailPage";
+import NewEventPage from "./pages/NewEventPage";
 import EditEventPage from "./pages/EditEventPage";
+import { submitFormAction } from "./components/EventForm";
 
 function App() {
   const router = createBrowserRouter([
@@ -41,11 +42,11 @@ function App() {
         {
           path: 'events', element: <EventsRoot />, children: [
             { index: true, element: <EventsPage />, loader: eventsLoader },
-            { path: 'new', element: <NewEventPage />, action: newEventAction },
+            { path: 'new', element: <NewEventPage />, action: submitFormAction },
             {
               path: ':id', id: 'event-detail', loader: eventDetailsLoader, children: [
-                { index: true, element: <EventDetailPage /> },
-                { path: ':edit', element: <EditEventPage /> },
+                { index: true, element: <EventDetailPage />, action: deleteAction },
+                { path: ':edit', element: <EditEventPage />, action: submitFormAction},
               ]
             },
 
