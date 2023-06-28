@@ -30,6 +30,7 @@ import EventDetailPage, { eventDetailsLoader, deleteAction } from "./pages/Event
 import NewEventPage from "./pages/NewEventPage";
 import EditEventPage from "./pages/EditEventPage";
 import { submitFormAction } from "./components/EventForm";
+import NewsletterPage, { newsletterAction } from './pages/Newsletter';
 
 function App() {
   const router = createBrowserRouter([
@@ -51,7 +52,8 @@ function App() {
             },
 
           ]
-        }
+        },
+        { path: 'newsletter', element: <NewsletterPage />, action: newsletterAction },
       ]
     }
   ]);
