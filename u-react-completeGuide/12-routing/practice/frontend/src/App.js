@@ -1,5 +1,4 @@
 // Challenge / Exercise
-
 // 1. Add five new (dummy) page components (content can be simple <h1> elements)
 //    - HomePage
 //    - EventsPage
