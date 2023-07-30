@@ -18,8 +18,14 @@ const router = createBrowserRouter([
       {
         path: 'posts',
         children: [
-          { index: true, element: <Suspense fallback={<p>Loading</p>}><BlogPage /></Suspense>, loader: () => import('./pages/Blog').then((module) => module.loader()) },
-          { path: ':id', element: <Suspense fallback={<p>Loading</p>}><PostPage /></Suspense>, loader: (meta) => import('./pages/Post').then((module) => module.loader(meta)) },
+          { index: true,
+            element: <Suspense fallback={<p>Loading</p>}><BlogPage /></Suspense>,
+            loader: () => import('./pages/Blog').then((module) => module.loader())
+          },
+          { path: ':id',
+            element: <Suspense fallback={<p>Loading</p>}><PostPage /></Suspense>,
+            loader: (meta) => import('./pages/Post').then((module) => module.loader(meta))
+          },
         ],
       },
     ],
