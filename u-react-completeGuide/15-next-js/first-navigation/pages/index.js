@@ -1,3 +1,4 @@
+// domain.com
 function HomePage() {
   return (
     <div>The Home Page</div>
