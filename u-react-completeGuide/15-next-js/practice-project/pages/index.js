@@ -20,15 +20,15 @@ export async function getStaticProps() {
 
 // this is executed in the server after deployment and every time the component is requested. This ensure the data is up to date.
 // better use if data constantly changes.
-export async function getServerSideProps(context) {
-    const req = context.req;
-    const res = context.res;
+// export async function getServerSideProps(context) {
+//     const req = context.req;
+//     const res = context.res;
 
-    return {
-        props: {
-            //something
-        }
-    };
-};
+//     return {
+//         props: {
+//             //something
+//         }
+//     };
+// };
 
 export default HomePage;
