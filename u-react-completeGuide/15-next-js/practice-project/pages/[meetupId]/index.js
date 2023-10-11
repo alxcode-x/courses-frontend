@@ -1,4 +1,5 @@
 //domain.com/meetupId
+import { MongoClient, ObjectId } from 'mongodb';
 import MeetupDetail from '../../components/meetups/MeetupDetail';
 
 function MeetupDetailsPage(props) {
@@ -8,34 +9,36 @@ function MeetupDetailsPage(props) {
 }
 
 export async function getStaticPaths() {
+    const client = await MongoClient.connect("mongodb+srv://<username>:<password>@cluster0.kvz0sgn.mongodb.net/<collection>?retryWrites=true&w=majority"); //replace <> values
+    const db = client.db();
+    const meetupsCollection = db.collection('meetups');
+    const meetups = await meetupsCollection.find({}, {_id: 1}).toArray(); // Using find like this, we can get only IDs.
+    client.close();
+
     return {
         falback: false, //false = all possible params are returned. true = not all possible params are returned, try to generate the page.
-        paths: [
-            {
-                params: {
-                    meetupId: 'm1'
-                }
-            }, 
-            {
-                params: {
-                    meetupId: 'm2'
-                }
-            },
-        ]
-
-    }
+        paths: meetups.map((meetup) => ({
+            params: { meetupId: meetup._id.toString() }
+        })),
+    };
 }
 
 export async function getStaticProps(context) {
     const meetupId = context.params.meetupId; // getStaticPaths must be defined to be able to use context.
+
+    const client = await MongoClient.connect("mongodb+srv://<username>:<password>@cluster0.kvz0sgn.mongodb.net/<collection>?retryWrites=true&w=majority"); //replace <> values
+    const db = client.db();
+    const meetupsCollection = db.collection('meetups');
+    const selectedMeetup = await meetupsCollection.findOne({_id: ObjectId(meetupId)});
+    client.close();
+
     return {
         props: {
             meetupData: {
-                id: meetupId,
-                image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fopidesign.net%2Flandscape-architecture%2Flandscape-architecture-fun-facts%2F&psig=AOvVaw2pPyuCUMyWaLlwFgIgpwIS&ust=1691718770648000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCLiPw9X90IADFQAAAAAdAAAAABAE",
-                title: "first meetup",
-                address: "some address",
-                description: "some description",
+                id: selectedMeetup._id.toString(),
+                title: selectedMeetup.title,
+                address: selectedMeetup.address,
+                description: selectedMeetup.description,
             }
         }
     }
